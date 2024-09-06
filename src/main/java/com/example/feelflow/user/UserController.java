@@ -24,7 +24,7 @@ public class UserController {
     }
     @PostMapping("/signup")
     public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "signup_form";
         }
 
@@ -34,8 +34,13 @@ public class UserController {
             return "signup_form";
         }
 
-        userService.create(userCreateForm.getUsername(), userCreateForm.getEmail(),
-                userCreateForm.getPassword1());
+        userService.create(userCreateForm.getUsername(),
+                userCreateForm.getEmail(),
+                userCreateForm.getPassword1(),
+                userCreateForm.getNickname(),
+                userCreateForm.getName(),
+                userCreateForm.getBirthday(),
+                userCreateForm.getGender());
 
         return "redirect:/";
     }
