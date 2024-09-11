@@ -3,6 +3,8 @@ package com.example.feelflow.user;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @Getter
@@ -29,6 +31,7 @@ public class UserCreateForm {
     private String name;
 
     @NotNull(message = "생년월일은 필수항목입니다.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
     @NotEmpty(message = "성별은 필수항목입니다.")

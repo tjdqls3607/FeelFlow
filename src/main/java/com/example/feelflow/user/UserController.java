@@ -1,6 +1,5 @@
 package com.example.feelflow.user;
 
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +21,7 @@ public class UserController {
         model.addAttribute("userCreateForm", new UserCreateForm());
         return "signup_form";
     }
+
     @PostMapping("/signup")
     public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -34,14 +34,26 @@ public class UserController {
             return "signup_form";
         }
 
-        userService.create(userCreateForm.getUsername(),
-                userCreateForm.getEmail(),
-                userCreateForm.getPassword1(),
-                userCreateForm.getNickname(),
-                userCreateForm.getName(),
-                userCreateForm.getBirthday(),
-                userCreateForm.getGender());
+        try {
+            userService.create(userCreateForm.getUsername(),
+                    userCreateForm.getEmail(),
+                    userCreateForm.getPassword1(),
+                    userCreateForm.getNickname(),
+                    userCreateForm.getName(),
+                    userCreateForm.getBirthday(),
+                    userCreateForm.getGender());
+        } catch (Exception e) {
+            // 회원가입 실패 시 에러 처리
+            bindingResult.reject("signupFailed", e.getMessage());
+            return "signup_form";
+        }
 
-        return "redirect:/";
+        // 회원가입 성공 시 회원가입 완료 페이지로 리다이렉트
+        return "redirect:/user/signup_success";
+    }
+
+    @GetMapping("/signup_success")
+    public String signupComplete() {
+        return "signup_success";
     }
 }
