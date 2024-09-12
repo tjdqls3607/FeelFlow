@@ -56,4 +56,9 @@ public class UserController {
     public String signupComplete() {
         return "signup_success";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login_form";
+    }
 }
