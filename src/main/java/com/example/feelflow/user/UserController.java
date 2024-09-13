@@ -61,4 +61,9 @@ public class UserController {
     public String login() {
         return "login_form";
     }
+
+    @GetMapping("/mypage")
+    public String myPage() {
+        return "mypage"; // 여기에 마이페이지에 대한 뷰 이름을 반환합니다.
+    }
 }

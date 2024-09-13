@@ -19,11 +19,12 @@ public class SecurityConfig {
     SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/diary/**").authenticated()
+                        .requestMatchers("/user/logout").authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/user/login"),
                                 new AntPathRequestMatcher("/user/signup"),
                                 new AntPathRequestMatcher("/user/logout"),
                                 new AntPathRequestMatcher("/main"),
-                                new AntPathRequestMatcher("/diary/**"),  // 일기 관련 경로를 추가할 수 있습니다.
                                 new AntPathRequestMatcher("/**")).permitAll() // 모든 경로 접근 허용
                 )
                 .headers((headers) -> headers
@@ -40,7 +41,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true) // 세션 무효화
                         .deleteCookies("JSESSIONID") // 세션 쿠키 삭제
                 );
-                ;
         return http.build();
 
     }
