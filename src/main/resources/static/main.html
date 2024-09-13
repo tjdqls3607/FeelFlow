@@ -1,26 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FeelFlow</title>
-  <link rel="stylesheet" href="mainstyle.css">
+  <link rel="stylesheet" href="../mainstyle.css">
 </head>
+
 <body>
 <header>
-  <h2><a href="main.html">FeelFlow</a></h2>
+  <div class="header-content">
+    <h2><a href="main.html">FeelFlow</a></h2>
+    <nav>
+      <ul>
+        <li><a href="main.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <!-- 로그인이 되어 있을 경우 로그아웃 버튼 표시 -->
+        <li th:if="${#httpServletRequest.remoteUser != null}"><a href="/user/logout">로그아웃</a></li>
+      </ul>
+    </nav>
+  </div>
 </header>
 
 <div class="container">
   <div class="content">
-    <h3>환영합니다, FeelFlow에 오신 것을 환영합니다.</h3>
-    <p>로그인하려면 아래 버튼을 클릭하세요.</p>
-    <div class="buttons">
-      <a href="/login">로그인</a>
-      <p>아직 회원이 아니신가요? 회원가입하려면 아래 링크를 클릭하세요.</p>
-      <a href="user/signup">회원가입</a>
+    <!-- 로그인 여부에 따라 다른 메시지 표시 -->
+    <div th:if="${#httpServletRequest.remoteUser != null}">
+      <h3>환영합니다, FeelFlow에 오신 것을 환영합니다.</h3>
+      <p>일기를 작성하려면 아래 버튼을 클릭하세요.</p>
+      <div class="buttons">
+        <a href="/diary/new" class="button">일기 작성하기</a>
+      </div>
+    </div>
+    <div th:if="${#httpServletRequest.remoteUser == null}">
+      <h3>환영합니다, FeelFlow에 오신 것을 환영합니다.</h3>
+      <p>로그인하려면 아래 버튼을 클릭하세요.</p>
+      <div class="buttons">
+        <a href="user/login" class="button">로그인</a>
+        <p>아직 회원이 아니신가요? 회원가입하려면 아래 링크를 클릭하세요.</p>
+        <a href="user/signup" class="button">회원가입</a>
+      </div>
     </div>
   </div>
 </div>
+
 </body>
+
 </html>
