@@ -1,12 +1,11 @@
 package com.example.feelflow.user;
 
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,4 +28,13 @@ public class UserService {
         return user;
     }
 
+    public Optional<SiteUser> getByUsername(String username) {
+        return userRepository.findByusername(username);
+    }
+
+    public boolean authenticate(String username, String password) {
+        Optional<SiteUser> siteUser = getByUsername(username);
+        return siteUser.map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElse(false);
+    }
 }

@@ -23,7 +23,6 @@ public class SecurityConfig {
                         .requestMatchers("/user/logout").authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/user/login"),
                                 new AntPathRequestMatcher("/user/signup"),
-                                new AntPathRequestMatcher("/user/logout"),
                                 new AntPathRequestMatcher("/main"),
                                 new AntPathRequestMatcher("/**")).permitAll() // 모든 경로 접근 허용
                 )

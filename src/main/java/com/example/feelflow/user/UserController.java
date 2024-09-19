@@ -1,5 +1,6 @@
 package com.example.feelflow.user;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -43,12 +46,10 @@ public class UserController {
                     userCreateForm.getBirthday(),
                     userCreateForm.getGender());
         } catch (Exception e) {
-            // 회원가입 실패 시 에러 처리
             bindingResult.reject("signupFailed", e.getMessage());
             return "signup_form";
         }
 
-        // 회원가입 성공 시 회원가입 완료 페이지로 리다이렉트
         return "redirect:/user/signup_success";
     }
 
@@ -62,8 +63,30 @@ public class UserController {
         return "login_form";
     }
 
+    @PostMapping("/login")
+    public String login(String username, String password, HttpSession session) {
+        if (userService.authenticate(username, password)) {
+            Optional<SiteUser> siteUser = userService.getByUsername(username);
+            siteUser.ifPresent(user -> session.setAttribute("user", user));
+            return "redirect:/";
+        } else {
+            return "redirect:/user/login?error";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("user");
+        return "redirect:/";
+    }
+
     @GetMapping("/mypage")
-    public String myPage() {
-        return "mypage"; // 여기에 마이페이지에 대한 뷰 이름을 반환합니다.
+    public String myPage(HttpSession session, Model model) {
+        SiteUser user = (SiteUser) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        model.addAttribute("user", user);
+        return "mypage";
     }
 }
