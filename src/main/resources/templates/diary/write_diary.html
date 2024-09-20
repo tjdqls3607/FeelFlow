@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../diary_write.css">
+    <link rel="stylesheet" href="../menu_bar.css">
+    <link rel="stylesheet" href="../sidebar.css">
+
+    <!-- jQuery 로드 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".comment-content").keyup(function (e) {
+                var content = $(this).val();
+
+                // 글자수 세기
+                if (content.length == 0 || content == "") {
+                    $(".comment_length").text('0');
+                } else {
+                    $(".comment_length").text(content.length);
+                }
+
+                if (content.length > 1000) {
+                    // 1,000자부터는 타이핑 되지 않도록
+                    $(this).val($(this).val().substring(0, 1000));
+                    // 1,000자 넘으면 알림창 뜨도록
+                    alert("일기 내용은 최대 1,000자까지 입력 가능합니다.");
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+<!-- 네비게이션바 : 머리말 부분-->
+<div class="menu-top">
+    <div class="menu-bar2 menu-bar-item2">
+        <a href="main.html" class="menu-bar1 menu-button menu-bar-item1"><b>FeelFlow</b></a>
+        <div class="menu-bar2">
+            <a href="/diary/write" class="menu-button menu-bar-item2">새로운 일기</a>
+            <a href="#emotion_calender" class="menu-button menu-bar-item2">감정 캘린더</a>
+            <a href="#emotion_dash_board" class="menu-button menu-bar-item2">감정분석 대시보드</a>
+            <a href="#content" class="menu-button menu-bar-item2">콘텐츠 추천</a>
+            <a href="#matching" class="menu-button menu-bar-item2">사용자 매칭</a>
+            <a href="feel_mypage.php" class="menu-button menu-bar2 menu-bar-item2">마이페이지</a>
+        </div>
+    </div>
+</div>
+<div class="main_div">
+    <div class="leftbar">
+        <!-- 사이드바 아이콘들 -->
+        <div class="side_element">
+            <span><img class="element_img" src="font.png"></span>
+        </div>
+        <!-- 기타 아이콘 생략 -->
+    </div>
+    <div style="margin-right: 50px;">
+        <!-- form 태그, 입력된 데이터를 서버로 전송 -->
+        <form name="diary_write" method="post" action="/diary/write"> <!-- 액션 URL 수정 -->
+            <textarea cols="100" rows="2" name="title" placeholder="제목을 입력해주세요."></textarea><br> <!-- name 속성 수정 -->
+            <textarea cols="100" rows="20" name="content" class="comment-content" placeholder="내용을 입력해주세요."></textarea><br><br> <!-- name 속성 수정 -->
+            <!-- 글자수 제한 및 감지 -->
+            <span class="length" style="margin-right: 10px;">
+                <span class="comment_length">0</span>
+                / 1,000
+            </span>
+            <!-- 일기 텍스트 제출하기 버튼 -->
+            <button type="submit" class="submit-button">작성완료</button>
+        </form>
+    </div>
+    <div class="rightbar">
+        <!-- 이모티콘 섹션 생략 -->
+    </div>
+</div>
+</body>
+
+</html>
