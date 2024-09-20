@@ -1,16 +1,14 @@
 package com.example.feelflow.user;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Controller
@@ -63,29 +61,14 @@ public class UserController {
         return "login_form";
     }
 
-    @PostMapping("/login")
-    public String login(String username, String password, HttpSession session) {
-        if (userService.authenticate(username, password)) {
-            Optional<SiteUser> siteUser = userService.getByUsername(username);
-            siteUser.ifPresent(user -> session.setAttribute("user", user));
-            return "redirect:/";
-        } else {
-            return "redirect:/user/login?error";
-        }
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute("user");
-        return "redirect:/";
-    }
-
     @GetMapping("/mypage")
-    public String myPage(HttpSession session, Model model) {
-        SiteUser user = (SiteUser) session.getAttribute("user");
-        if (user == null) {
+    public String myPage(Authentication authentication, Model model) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/user/login";
         }
+        String username = authentication.getName();
+        SiteUser user = userService.getByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         model.addAttribute("user", user);
         return "mypage";
     }

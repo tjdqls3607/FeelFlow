@@ -16,33 +16,29 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/diary/**").authenticated()
-                        .requestMatchers("/user/logout").authenticated()
-                        .requestMatchers(new AntPathRequestMatcher("/user/login"),
-                                new AntPathRequestMatcher("/user/signup"),
-                                new AntPathRequestMatcher("/main"),
-                                new AntPathRequestMatcher("/**")).permitAll() // 모든 경로 접근 허용
+                        .requestMatchers("/user/mypage").authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                 )
-                .headers((headers) -> headers
+                .headers(headers -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
-
-                .formLogin((formLogin) -> formLogin
+                .formLogin(formLogin -> formLogin
                         .loginPage("/user/login")
-                        .defaultSuccessUrl("/main.html", true))
-
+                        .defaultSuccessUrl("/main.html", true)
+                )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/user/login") // 로그아웃 후 로그인 페이지로 리디렉트
-                        .invalidateHttpSession(true) // 세션 무효화
-                        .deleteCookies("JSESSIONID") // 세션 쿠키 삭제
+                        .logoutSuccessUrl("/main.html")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 );
         return http.build();
-
     }
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

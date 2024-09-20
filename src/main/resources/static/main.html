@@ -1,68 +1,52 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FeelFlow</title>
   <link rel="stylesheet" href="../mainstyle.css">
 </head>
-
 <body>
 <header>
-  <div class="header-content">
-    <h2><a href="main.html">FeelFlow</a></h2>
-  </div>
+  <h1><a href="main.html">FeelFlow</a></h1>
   <nav>
     <ul>
       <li><a href="main.html">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="services.html">Services</a></li>
       <li><a href="contact.html">Contact</a></li>
-
-      <!-- 로그인된 경우 -->
-      <li th:if="${#authentication.name != 'anonymousUser'}">
-        <a href="/user/logout">로그아웃</a>
-      </li>
-      <li th:if="${#authentication.name != 'anonymousUser'}">
-        <a href="/user/mypage">마이페이지</a>
-      </li>
-
-      <!-- 로그인되지 않은 경우 -->
-      <li th:if="${#authentication.name == 'anonymousUser'}">
-        <a href="/user/login">로그인</a>
-      </li>
-      <li th:if="${#authentication.name == 'anonymousUser'}">
-        <a href="/user/signup">회원가입</a>
-      </li>
+      <li sec:authorize="isAuthenticated()"><a href="/user/logout">로그아웃</a></li>
+      <li sec:authorize="isAuthenticated()"><a href="/user/mypage">마이페이지</a></li>
+      <li sec:authorize="isAnonymous()"><a href="/user/login">로그인</a></li>
+      <li sec:authorize="isAnonymous()"><a href="/user/signup">회원가입</a></li>
     </ul>
   </nav>
 </header>
 
-<div class="container">
-  <div class="content">
-    <!-- 로그인된 경우 -->
-    <div th:if="${#authentication.name != 'anonymousUser'}">
+<main>
+  <div class="container">
+    <div class="content">
       <h3>환영합니다, FeelFlow에 오신 것을 환영합니다.</h3>
-      <p>일기를 작성하려면 아래 버튼을 클릭하세요.</p>
-      <div class="buttons">
+
+      <div sec:authorize="isAuthenticated()">
+        <p><span sec:authentication="name"></span>님, 오늘 하루는 어떠셨나요?</p>
+        <p>일기를 작성하려면 아래 버튼을 클릭하세요.</p>
         <a href="/diary/write" class="button">일기 작성하기</a>
       </div>
-    </div>
 
-    <!-- 로그인되지 않은 경우 -->
-    <div th:if="${#authentication.name == 'anonymousUser'}">
-      <h3>환영합니다, FeelFlow에 오신 것을 환영합니다.</h3>
-      <p>로그인하려면 아래 버튼을 클릭하세요.</p>
-      <div class="buttons">
+      <div sec:authorize="isAnonymous()">
+        <p>FeelFlow와 함께 당신의 감정을 기록해보세요.</p>
+        <p>로그인하려면 아래 버튼을 클릭하세요.</p>
         <a href="/user/login" class="button">로그인</a>
         <p>아직 회원이 아니신가요? 회원가입하려면 아래 링크를 클릭하세요.</p>
         <a href="/user/signup" class="button">회원가입</a>
       </div>
     </div>
   </div>
-</div>
+</main>
 
+<footer>
+  <!-- Add your footer content here -->
+</footer>
 </body>
-
 </html>
